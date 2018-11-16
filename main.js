@@ -1,6 +1,6 @@
 const api = require('binance');
-let MovingAverage = require('./ma-module.js');
-//const binanceWS = new api.BinanceWS(true);
+let MovingAverage = require('./ma_module.js');
+const binanceWS = new api.BinanceWS(true);
 
   //const WebSocket = require('ws');
 // const binanceRest = new api.BinanceRest({
@@ -29,9 +29,9 @@ ma_BNB.getSMA('4h', 20).then((result) => {
      console.log('20 period (self calculated) MA: ' + result.toString());
  });
 
-//binanceWS.onKline('BNBBTC', '1m', (data) => {
-//   console.log(data);
-//});
+binanceWS.onKline('BNBBTC', '4h', (data) => {
+  console.log(data);
+});
 
 //ma_BNB.getSMA('1d', 50).then((result) => {
 //    console.log('50 period MA: ' + result.toString());

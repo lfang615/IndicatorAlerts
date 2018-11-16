@@ -8,7 +8,7 @@ class MovingAverage{
             key: 'nDvUlZPkI0S1adgfcR4eE7C5BB23lcFaLKV1LL7SYZxdhHYal0inX7NBwE4k7OKZ',
             secret: 'e5lCovFNHjMS98tRQCNPHtBUC6baCgSwOQMug7JyJQ8DaNBGElNln2woyfJoNAyO'
         });
-        this.exchangeWS = new api.BinanceWS();
+        this.exchangeWS = new api.BinanceWS(true);
     }
 
      getEpoch(periodLength){
@@ -109,6 +109,31 @@ class MovingAverage{
         .catch((err) => { console.log(err); });
 
         return movingAverage;
+    }
+
+    getSMA_Stream(){
+
+        let movingAverage = this.exchangeRest.klines({
+            symbol: this.pair,
+            interval: interval,
+            startTime: this.getEpoch(periodLength)
+        })
+        .then((data) => {
+            // Compute MA
+            let sum = 0;
+            for (let i = 0; i < data.length-1; i++) {
+                sum += parseFloat(data[i]['close']);
+            }
+
+            return (sum / periodLength).toFixed(8);
+
+        })
+        .catch((err) => { console.log(err); });
+
+        return movingAverage;
+        this.exchangeWS.onKline('BNBBTC', '4h', (data) => {
+            console.log(data);
+          });
     }
 
     
