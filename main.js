@@ -1,5 +1,6 @@
 const api = require('binance');
 let MovingAverage = require('./ma_module.js');
+let Volume = require('./volume_module');
 const binanceWS = new api.BinanceWS(true);
 
   //const WebSocket = require('ws');
@@ -15,7 +16,13 @@ const binanceWS = new api.BinanceWS(true);
 
 let ma_BNB = new MovingAverage('ETHBTC');
 
-ma_BNB.getClosingPrice('4h', 3).then((result) => { console.log(result); });
+let vol_BNB = new Volume('ETHBTC');
+
+vol_BNB.calcRSI('4h');
+vol_BNB.getVolumeAvg('1d', 20);
+vol_BNB.getPrevClosePrice('4h');
+
+// ma_BNB.getClosingPrice('4h', 3).then((result) => { console.log(result); });
 
  ma_BNB.getEMA('4h', 100).then((result) => {
      console.log('100 period EMA: ' + result.toString());
@@ -25,21 +32,21 @@ ma_BNB.getTestSMA('4h', 20).then((result) => {
      console.log('20 period (no calc) MA: ' + result.toString());
  });
 
-ma_BNB.getSMA('4h', 20).then((result) => {
-     console.log('20 period (self calculated) MA: ' + result.toString());
- });
+// ma_BNB.getSMA('4h', 20).then((result) => {
+//      console.log('20 period (self calculated) MA: ' + result.toString());
+//  });
 
-binanceWS.onKline('BNBBTC', '4h', (data) => {
-  console.log(data);
+// binanceWS.onKline('BNBBTC', '4h', (data) => {
+//   console.log(data);
+// });
+
+ma_BNB.getSMA('1d', 50).then((result) => {
+   console.log('50 period MA: ' + result.toString());
 });
 
-//ma_BNB.getSMA('1d', 50).then((result) => {
-//    console.log('50 period MA: ' + result.toString());
-//});
-
-//ma_BNB.getSMA('1d', 100).then((result) => {
-//    console.log('100 period MA: ' + result.toString());
-//});
+ma_BNB.getSMA('1d', 100).then((result) => {
+   console.log('100 period MA: ' + result.toString());
+});
 
 
 

@@ -111,7 +111,7 @@ class MovingAverage{
         return movingAverage;
     }
 
-    getSMA_Stream(){
+    getSMA_Stream(interval, periodLength){
 
         let movingAverage = this.exchangeRest.klines({
             symbol: this.pair,
@@ -125,15 +125,23 @@ class MovingAverage{
                 sum += parseFloat(data[i]['close']);
             }
 
-            return (sum / periodLength).toFixed(8);
-
+            console.log((sum / periodLength - 1).toFixed(8));           
         })
         .catch((err) => { console.log(err); });
 
-        return movingAverage;
-        this.exchangeWS.onKline('BNBBTC', '4h', (data) => {
-            console.log(data);
-          });
+        //return movingAverage;
+
+        
+    }
+
+    
+
+    printStream(result, data, periodLength){
+        let resultTest = result;
+        let dataTest = data;
+        let periodLen = periodLength;
+        let calc = result + parse.parseFloat(data[data.length - 1]['close']) / periodLength;
+        console.log((result + parse.parseFloat(data[data.length - 1]['close']) / periodLength));                              
     }
 
     
