@@ -46,13 +46,58 @@ class Volume{
     calcRSI(interval){
         this.exchangeRest.klines({
             symbol: this.pair,
-            interval: interval,
-            limit: 14 
+            interval: interval, 
         })
         .then((result) => {
-           this.rsiDebug(result);
+           console.log('This is the length of the RSI bitch: ' + result.length);
         }).catch((err) => {console.log(err);})
     }
+
+    calcRSI_2(interval){
+        this.exchangeRest.klines({
+            symbol: this.pair,
+            interval: interval,
+            limit: 14
+        })
+        .then((result) => {
+            let gain = 0;
+            let loss = 0
+            let prevGain = 0;
+            let prevLoss = 0;
+
+            for(let i = 0; i <= result.length-1; i++){
+                for(let z = i+1; z <= result.length - 1; z++){
+                    let change = this.closingPriceChange(parseFloat(result[i]['close']), parseFloat(result[z]['close'])); 
+                    if(change >= 0){
+                        gain += change;
+                    }
+                    if(change < 0){
+                        loss += (-1 * change);
+                    }
+                   
+                    break;
+                }
+            }
+            
+            let current = parseFloat(result[13]['close']) - parseFloat(result[12]['close']);
+            let close = parseFloat(result[13]['close']);
+            let alpha = 1 / 14;
+            let smoothedRS = ((gain * 13) + ((current) >= 0 ? current : 0) / 14) / ((loss * 13) + ((current) < 0 ? (-1 * current) : 0) / 14); 
+            let new_avg_value = close * alpha + (1 - alpha) * smoothedRS;
+            let avgGain = gain / 14;
+            let avgLoss = loss / 14;
+
+            let anotherRSI = 100 - (100 / 1 + (avgGain * 13 + ((current) >= 0 ? current : 0)) / (avgLoss * 13 + ((current) < 0 ? (-1 * current) : 0)));
+            
+            let rs = avgGain / avgLoss;
+            let rsi = 100 - (100 / (1 + rs));
+    
+            let newRSI = 100 - (100 / (1 + new_avg_value));
+    
+            console.log(newRSI);
+        }).catch((err) => {console.log(err);})
+    }
+
 
     rsiDebug(result){
         let gain = 0;

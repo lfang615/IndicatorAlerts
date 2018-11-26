@@ -18,7 +18,7 @@ let ma_BNB = new MovingAverage('ETHBTC');
 
 let vol_BNB = new Volume('ETHBTC');
 
-vol_BNB.calcRSI('4h');
+vol_BNB.calcRSI_2('4h');
 vol_BNB.getVolumeAvg('1d', 20);
 vol_BNB.getPrevClosePrice('4h');
 
